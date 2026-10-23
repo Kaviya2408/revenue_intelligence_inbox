@@ -1,0 +1,26 @@
+{
+  "name": "salesdesk",
+  "version": "1.0.0",
+  "description": "Sales manager inbox for call and meeting records: dashboard, routing, analysis, exports and safe re-imports.",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test",
+    "replay": "node scripts/replay.js",
+    "export": "node scripts/export.js"
+  },
+  "keywords": [
+    "sales",
+    "crm",
+    "revenue-intelligence",
+    "call-analysis",
+    "meeting-records"
+  ],
+  "author": "",
+  "license": "MIT"
+}

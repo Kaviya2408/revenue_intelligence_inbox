@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SalesDesk</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">SD</span> SalesDesk <small>call &amp; meeting inbox</small></div>
+  <nav id="nav">
+    <a href="#/" data-v="dash">Dashboard</a>
+    <a href="#/inbox" data-v="inbox">Inbox</a>
+    <a href="#/imports" data-v="imports">Imports</a>
+    <a href="#/export" data-v="export">Export</a>
+  </nav>
+  <div class="filters">
+    <select id="fType" aria-label="Source type"><option value="all">Calls + meetings</option><option value="call">Calls</option><option value="meeting">Meetings</option></select>
+    <select id="fPerson" aria-label="Person"><option value="all">Everyone</option></select>
+  </div>
+</header>
+<main id="app" aria-live="polite"></main>
+<div id="toast" role="status"></div>
+<script src="/app.js"></script>
+</body>
+</html>

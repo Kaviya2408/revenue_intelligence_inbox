@@ -1,0 +1,45 @@
+{
+  "findings": [
+    {
+      "id": 1,
+      "title": "Only 40.9% of the day can be judged; the connected-call count overstates what we know",
+      "claim": "18 of 44 records (40.9%) have usable text. 20 calls have no logged text, 3 meetings were silent and 3 were never captured. Of the 11 calls the source marks as connected, 2 (B11, B14) have no text and an outcome of 'unresponsive', so only 9 connected calls can be reviewed.",
+      "evidence": [
+        { "ref": "M05", "type": "meeting", "field": "transcript_payload.unavailable_reason", "quote": "The meeting was recorded but nobody spoke." },
+        { "ref": "B11", "type": "call", "field": "payload", "check": { "is_connected": true, "observed_outcome": "unresponsive", "transcript": null } },
+        { "ref": "B14", "type": "call", "field": "payload", "check": { "is_connected": true, "observed_outcome": "unresponsive", "transcript": null } }
+      ],
+      "so_what": "Do not read the dashboard as a team performance view. Fix capture (text logging for calls, notetaker on meetings) before judging reps."
+    },
+    {
+      "id": 2,
+      "title": "M04 Cedarwave Distribution is the one record that needs a manager today",
+      "claim": "An existing customer is being moved off its prepaid card programme. The customer says moving from prepaid to credit is the main issue, our rep refuses to promise it, and both sides left with open follow-ups and no date.",
+      "evidence": [
+        { "ref": "M04", "turn": 10, "quote": "The replacement I described is still prepaid. I do not want to promise that this becomes a credit card in the near term." },
+        { "ref": "M04", "turn": 11, "quote": "moving from prepaid to credit is the main issue for us" },
+        { "ref": "M04", "turn": 23, "quote": "I will check whether your already-issued cards can join the transaction-feed programme." },
+        { "ref": "M04", "turn": 32, "quote": "Okay. I will come back to you on that as well." }
+      ],
+      "so_what": "Highest priority score (80). Assign an owner and a date for the eligibility answer before the old programme closes."
+    },
+    {
+      "id": 3,
+      "title": "The stored label on C09 is wrong: it is not a referral",
+      "claim": "The source labels C09 'referred'. The contact declined the offer, said they build their own software, and refused to let the rep use their name. Routing it to Deal next steps would put a dead lead in the pipeline; it goes to Outreach log with a coaching flag instead.",
+      "evidence": [
+        { "ref": "C09", "type": "call", "quote": "we aren't looking for anything outside the organisation" },
+        { "ref": "C09", "type": "call", "quote": "No, please don't use my name." },
+        { "ref": "C09", "type": "call", "field": "payload.observed_outcome", "check": { "observed_outcome": "referred" } }
+      ],
+      "so_what": "Stored outcome labels are an input to check, not a fact. The label-versus-text check flagged 5 of 10 text-covered calls; on reading them, C09 is a true mismatch and the others are false alarms (see limits)."
+    }
+  ],
+  "rejected_decision": {
+    "title": "Keep one route field and let the latest analysis overwrite it",
+    "considered": "The simplest design stores a single 'route' per record that every import refreshes. It needs no override model, no 'suggestion changed' state and no superseded exports.",
+    "why_rejected": "It destroys manager decisions. M07 shows it: the transcript was withheld in revision 1 and arrived in revision 2. A manager who routed M07 to Customer follow-up while waiting would lose that choice the moment the update ran, and the export would silently move the file. The same flaw would let a re-import of old data undo corrections.",
+    "chosen": "Store the manual route beside, not inside, the source and the suggestion. A newer revision may change the suggestion and shows a 'suggestion changed' banner, but the manual route stays in force until the manager keeps it or resets it. Costs: a second field, a banner, and 'superseded' bookkeeping in the manifest.",
+    "evidence_test": "tests/engine.test.js: 'import contract replay' and 'manual route survives a changed suggestion'"
+  }
+}
